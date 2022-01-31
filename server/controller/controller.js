@@ -30,8 +30,28 @@ exports.create = (req, res)=>{
 }
 
 //retrieve and return all users/ retrive and return a single user
-exports.find = (re, res) => {
-    Userdb.find()
+exports.find = (req, res) => {
+    //Error to fix, not getting id in Obj
+    console.log('testing:' , req.body.id)
+    if(req.query.id){
+        const id = req.query.id;
+        Userdb.find(id)
+            .then(data =>{
+                if(!data){
+                    res.status(404).send({
+                        message: `User with id: ${id} not found`
+                    })
+                }else {
+                    res.send(data)
+                }
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: `Error retrieving user with id: ${id}`
+                })
+            })
+    }else {
+        Userdb.find()
         .then(user => {
             res.send(user)
         })
@@ -40,6 +60,8 @@ exports.find = (re, res) => {
                 message: err.message || "Some error occured when retrieving user"
             })
         })
+    }
+    
 }
 
 //Update a new identified user by user id
