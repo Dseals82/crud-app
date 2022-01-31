@@ -20,7 +20,8 @@ exports.create = (req, res)=>{
     user
         .save(user)
         .then(data =>{
-            res.send(data)
+            // res.send(data)
+            res.redirect('/add-user')
         })
         .catch(err =>{
             res.status(500).send({
@@ -32,11 +33,12 @@ exports.create = (req, res)=>{
 //retrieve and return all users/ retrive and return a single user
 exports.find = (req, res) => {
     //Error to fix, not getting id in Obj
-    console.log('testing:' , req.body.id)
+    console.log('testing:' , req.query)
     if(req.query.id){
         const id = req.query.id;
-        Userdb.find(id)
+        Userdb.findById(id)
             .then(data =>{
+                console.log('data', data)
                 if(!data){
                     res.status(404).send({
                         message: `User with id: ${id} not found`
